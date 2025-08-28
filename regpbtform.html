@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Person Registration</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="person.css">
+
+</head>
+<body>
+
+<h2>Mahakumbh Person Registration </h2>
+
+<form id="personForm"  enctype="multipart/form-data" method="POST" action="http://localhost:3000/insert-person">
+    <table border="2" cellpadding="6" width="1300">
+        <tr>
+            <td>Name</td><td><input type="text" name="Name" required></td>
+            <td>State</td><td><input type="text" name="StateFK"></td>
+        </tr>
+        <tr>
+            <td>Mobile</td><td><input type="text" name="MobNo"></td>
+            <td>LandMark</td><td><input type="text" name="Landmark"></td>
+        </tr>
+        <tr>
+            <td>Aadhar Number</td><td><input type="text" name="AadharNo"></td>
+            <td>Police Station</td><td><input type="text" name="PoliceStation"></td>
+        </tr>
+        <tr>
+            <td>Gender</td><td><input type="text" name="Gender"></td>
+            <td>Panchayat Number</td><td><input type="text" name="PanchyatNo"></td>
+        </tr>
+        <tr>
+            <td>Nationality</td><td><input type="text" name="Nationality"></td>
+            <td>Identification Mark</td><td><input type="text" name="IdentificationMark"></td>
+        </tr>
+        <tr>
+            <td>Emergency Mobile</td><td><input type="text" name="EmergencyMob"></td>
+            <td>Travelling Date</td><td><input type="date" name="TravellingDate"></td>
+        </tr>
+        <tr>
+            <td>Mode Of Transport</td><td><input type="text" name="ModeOfTransport"></td>
+            <td>Return Date</td><td><input type="date" name="ReturnDate"></td>
+        </tr>
+        <tr>
+            <td>Transport Number</td><td><input type="text" name="TransportNo"></td>
+            <td>Other Destination</td><td><input type="text" name="ReturnType"></td>
+        </tr>
+        <tr>
+            <td>House Number</td><td><input type="text" name="HouseNo"></td>
+            <td>Accommodation Type</td><td><input type="text" name="ATypeFK"></td>
+        </tr>
+        <tr>
+            <td>Colony</td><td><input type="text" name="Colony"></td>
+            <td>Reg Type</td><td><input type="text" name="RegTypeFK"></td>
+        </tr>
+        <tr>
+            <td>Town/City</td><td><input type="text" name="TownCity"></td>
+            <td rowspan="4">Photo</td>
+        </tr>
+        <tr>
+            <td>Tahsil</td><td><input type="text" name="Tehsil"></td>
+        </tr>
+        <tr>
+            <td>Block</td><td><input type="text" name="Block"></td>
+        </tr>
+        <tr>
+            <td>District</td><td><input type="text" name="District"></td>
+        </tr>
+        <tr>
+            <td>Pincode</td><td><input type="text" name="Pincode"></td>
+            <td><input type="file" name="Photo" accept="image/*" required></td>
+        </tr>
+    </table>
+
+    <p>
+        <button type="submit">Submit</button>
+        <button type="reset">Reset</button>
+    </p>
+</form>
+
+<script>
+document.getElementById('personForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = this; // save reference to form
+    const formData = new FormData(form);
+
+    const addMore = confirm("Group will be created with this member. Do you want to add more members to this group?");
+    
+    formData.append('isNewGroup', addMore ? 'true' : 'false');
+    if (!addMore) {
+        formData.append('GroupID', ''); // No group ID needed
+    }
+
+    fetch('http://localhost:3000/insert-person', {
+        method: 'POST',
+        body: formData
+    })
+    .then(res => res.json())
+    .then(response => {
+        console.log("Server Response:", response);
+
+        if (addMore) {
+            if (response.groupId) {
+                // save common details
+                const commonDetails = {
+                    StateFK: formData.get('StateFK'),
+                    Landmark: formData.get('Landmark'),
+                    PoliceStation: formData.get('PoliceStation'),
+                    PanchyatNo: formData.get('PanchyatNo'),
+                    IdentificationMark: formData.get('IdentificationMark'),
+                    TravellingDate: formData.get('TravellingDate'),
+                    ReturnDate: formData.get('ReturnDate'),
+                    ReturnType: formData.get('ReturnType'),
+                    ModeOfTransport: formData.get('ModeOfTransport'),
+                    TransportNo: formData.get('TransportNo'),
+                    HouseNo: formData.get('HouseNo'),
+                    Colony: formData.get('Colony'),
+                    TownCity: formData.get('TownCity'),
+                    Tehsil: formData.get('Tehsil'),
+                    Block: formData.get('Block'),
+                    District: formData.get('District'),
+                    Pincode: formData.get('Pincode'),
+                    ATypeFK: formData.get('ATypeFK'),
+                    RegTypeFK: formData.get('RegTypeFK'),
+                    Nationality: formData.get('Nationality'),
+                    EmergencyMob: formData.get('EmergencyMob')
+                };
+                localStorage.setItem("commonDetails", JSON.stringify(commonDetails));
+
+                alert("Group created and first member added.");
+                window.location.href = `add_members.html?groupId=${response.groupId}`;
+            } else {
+                alert("Group ID not received from server. Cannot proceed.");
+            }
+        } else {
+            alert("Single person registration successful.");
+            form.reset(); // ✅ fixed (use form instead of this)
+        }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        alert('Error inserting data');
+    });
+});
+</script>

@@ -1,0 +1,104 @@
+require
+Function provided by Node.js module loader.
+Loads a module (here, 'express') and returns whatever the module exports.
+
+--express
+The variable express here stores the exported function from the Express module.
+That function, when invoked, creates an Express application object.
+
+const bodyParser = require('body-parser');
+-----body-parser
+An external middleware module.
+Exports functions like .json() and .urlencoded() that return middleware functions.
+Middleware functions are just (req, res, next) handlers used by Express to process requests
+
+----mysql2
+External package that provides functions to connect to MySQL databases.
+It exports functions like .createConnection() which returns a Connection object.
+
+--cors → Without this, your HTML page can’t send data to localhost:3000 if it’s opened from a file or another port.
+
+multer → Special middleware to handle file uploads in HTML forms (<input type="file">).
+
+fs → Lets us read files so we can store them as binary in the DB.
+
+
+const app = express();
+--express() → Calls the function returned by require('express').
+Returns an application object:
+This object represents your web server.
+It contains methods like .get(), .post(), .use(), .listen() for routing and middleware setup.
+Equivalent in Java thinking:
+If Express were a class, express() is like calling a static method that returns an instance of that class.
+
+--.use() is an instance method of the Express application object.
+It accepts a middleware function as an argument.
+
+--cors() returns a middleware function, so this line registers it globally for all routes.
+
+.urlencoded(...) returns middleware that parses URL-encoded request bodies (like HTML form submissions without files).
+
+{ extended: true } means it uses the qs library for rich object parsing, not the basic querystring module.
+
+
+app.post('/insert-person', (req, res) => {
+.post() is an instance method of the Express application object.
+
+First parameter: path string ('/insert-person').
+
+Second parameter: route handler function (req, res) => { ... }
+
+req = request object (like HttpServletRequest in Java)
+
+res = response object (like HttpServletResponse in Java)
+
+This tells Express: "When a POST request comes to /insert-person, run this function.
+
+.query() is an instance method of Connection.
+
+Parameters:
+
+SQL string with ? placeholders
+
+Array of values
+
+Callback (err, result)
+
+result.insertId → MySQL automatically generated ID for the inserted row.
+
+
+
+
+const upload = multer({ dest: 'uploads/' });
+This tells multer: “When a file is uploaded, store it in the uploads/ folder with a random name.”
+
+Later, we’ll read the file and put it into MySQL.
+
+
+const db = mysql.createConnection
+    
+db.connect(err => {})
+This connects Node.js to your MySQL DB running in XAMPP.
+
+If the DB is down or credentials are wrong, err will be thrown.
+
+
+req.file contains info about the uploaded file (name, path, size, etc.).
+
+We read the file synchronously (blocking) into a Buffer — a chunk of binary data.
+
+Each ? is a placeholder for one column value.
+
+MySQL2 replaces these safely with your values (helps prevent SQL injection).
+
+Running the query
+db.query(sql, values, (err, result) => {
+    if (err) {
+        console.error(err);
+        return res.status(500).send('Database insert failed');
+    }
+    res.send({ message: 'Data inserted successfully', insertId: result.insertId });
+});
+If MySQL throws an error (like "Column cannot be null"), it’s logged and a 500 is sent.
+
+If success, returns JSON with the new record’s insertId.
