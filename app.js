@@ -92,10 +92,8 @@ app.post('/insert-person', upload.any(), async (req, res, next) => {
             res.json({ message: "All members inserted successfully!", groupId: groupIdToUse });
 
             
-            // =============================================================
-            // ▲▲▲ END OF FIX ▲▲▲
-            // =============================================================
-
+            
+        
 
         } else {
             // This part for single-person registration remains the same and is correct.
@@ -121,7 +119,7 @@ app.post('/insert-person', upload.any(), async (req, res, next) => {
     }
 });
 
-// Global Error Handler (no changes needed here)
+// 
 app.use((err, req, res, next) => {
     console.error("💥 An error was caught by the global handler:", err);
     if (err instanceof multer.MulterError) {
@@ -130,9 +128,9 @@ app.use((err, req, res, next) => {
     return res.status(500).json({ error: "An internal server error occurred", details: err.message });
 });
 
-// ============================
+
 // START SERVER
-// ============================
+
 app.listen(3000, () => {
     console.log('Server running on localhost:3000');
 });

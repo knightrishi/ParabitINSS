@@ -44,6 +44,9 @@
     <button id="finalSubmit">Submit All</button>
 
 <script>
+    //JavaScript, window.location represents the current page URL.
+    //URLSearchParams is a built-in helper that makes it easy to extract values.
+
     const urlParams = new URLSearchParams(window.location.search);
     const groupId = urlParams.get('groupId');
     if (groupId) {
@@ -54,9 +57,10 @@
     let membersList = [];
 
     document.getElementById('memberForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+        e.preventDefault();//Prevents page refresh
 
         const formData = new FormData(this);
+        //object creation for each member
         const member = {
             Name: formData.get('Name'),
             MobNo: formData.get('MobNo'),
@@ -67,6 +71,7 @@
         };
 
         const photoFile = formData.get('Photo');
+        //URL.createObjectURL() generates a preview so we can show the photo in the table immediately.
         if (photoFile && photoFile.size > 0) {
             member.Photo = URL.createObjectURL(photoFile); // for preview
             member._rawPhoto = photoFile; // keep original file for upload
@@ -94,7 +99,7 @@
             alert("No members to submit!");
             return;
         }
-
+        //Then retrieves common details (like Address, District, etc.) from localStorage that were saved earlier in the group creation step.
         const commonDetails = localStorage.getItem("commonDetails");
         if (!commonDetails) {
             alert("Common details not found. Please start registration again.");
