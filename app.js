@@ -1,18 +1,20 @@
-const express = require('express');
+// --- Core dependencies ---
+const express = require('express');                                // HTTP server & routing
 const mysql = require('mysql2/promise');
-const cors = require('cors');
-const multer = require('multer');
+const cors = require('cors');                                       // Cross-Origin Resource Sharing
+const multer = require('multer');                                   // Multipart/form-data (file uploads)
 
-// ============================
-// APP INITIALIZATION
-// ============================
 
+//insiliuzation
 const app = express();
-
+// Enable CORS for browser clients calling this API
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+// We keep files in memory as Buffers (saves disk I/O, but watch RAM usage).
+// For production, consider: limits + fileFilter + external object storage.
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -76,6 +78,7 @@ app.post('/insert-person', upload.any(), async (req, res, next) => {
 
             const insertPromises = membersFromRequest.map((memberData, index) => {
                 // Find the photo for this member by matching the index
+                // Match photo by convention: fieldname = members[0][Photo], members[1][Photo], ...
                 const photoFile = req.files.find(f => f.fieldname === `members[${index}][Photo]`);
 
                 // Combine common details with unique member details
