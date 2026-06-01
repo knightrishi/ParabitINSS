@@ -4,11 +4,13 @@
  */
 package com.mycompany.pbtinss;
 
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-
+import javax.swing.UIManager;
+import com.formdev.flatlaf.FlatDarkLaf;
 /**
  *
  * @author Arnav Singh
@@ -153,20 +155,30 @@ public static String getEmpID() {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
+              // Main panel background - Deep, sophisticated Slate-Charcoal
+             // FlatDarkLaf.setup();
+UIManager.put("Panel.background", new Color(26, 30, 38));
+
+// TextFields - Slightly lighter slate for subtle depth
+UIManager.put("TextField.background", new Color(34, 39, 49));
+UIManager.put("TextField.foreground", new Color(220, 225, 235)); // Soft, crisp off-white (easy on the eyes)
+UIManager.put("TextField.caretForeground", new Color(220, 225, 235));
+
+// Buttons - Sleek, muted Royal Blue/Indigo accent
+UIManager.put("Button.background", new Color(45, 105, 245));    // Clean, professional blue
+UIManager.put("Button.foreground", new Color(255, 255, 255));   // Crisp white
+
+// Labels - Muted Silver/Gray for clean, elegant typography
+UIManager.put("Label.foreground", new Color(150, 160, 175));
+            UIManager.put("Component.arc", 8);           // Rounds corners of buttons and text fields elegantly
+UIManager.put("TextComponent.arc", 8);
+UIManager.put("Component.arrowType", "chevron");
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PbtEmpLog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PbtEmpLog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PbtEmpLog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        }catch (Exception ex) {
             java.util.logging.Logger.getLogger(PbtEmpLog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+    //</editor-fold>
+    
         //</editor-fold>
 
         /* Create and display the dialog */
