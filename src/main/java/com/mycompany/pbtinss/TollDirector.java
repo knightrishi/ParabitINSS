@@ -1,5 +1,7 @@
 package com.mycompany.pbtinss;
 
+import com.mycompany.pbtinss.registration.LiveChart;
+import com.mycompany.pbtinss.database.ParabitDBC;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.sql.SQLException;

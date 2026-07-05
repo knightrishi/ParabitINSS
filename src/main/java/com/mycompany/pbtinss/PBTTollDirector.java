@@ -4,7 +4,7 @@
  */
 package com.mycompany.pbtinss;
 
-import com.mycompany.pbtinss.ParabitDBC;
+import com.mycompany.pbtinss.database.ParabitDBC;
 import java.awt.Component;
 import java.sql.SQLException;
 import javafx.application.Platform;
